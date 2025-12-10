@@ -2,8 +2,8 @@
 
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { 
-    Float, Stars, Environment, MeshTransmissionMaterial, Sparkles, 
+import {
+    Float, Stars, Environment, MeshTransmissionMaterial, Sparkles,
     Torus, Sphere, Box, Cylinder, Cone
 } from "@react-three/drei";
 import * as THREE from "three";
@@ -37,7 +37,7 @@ const AerogelMaterial = ({ color }: { color: string }) => (
 );
 
 const TechMaterial = ({ color, emissive = false }: { color: string, emissive?: boolean }) => (
-    <meshStandardMaterial 
+    <meshStandardMaterial
         color={color}
         metalness={0.8}
         roughness={0.2}
@@ -50,7 +50,7 @@ const TechMaterial = ({ color, emissive = false }: { color: string, emissive?: b
 function ReactLogo({ position }: { position: [number, number, number] }) {
     const group = useRef<THREE.Group>(null);
     useFrame((state, delta) => {
-       if(group.current) group.current.rotation.y += delta * 0.5
+        if (group.current) group.current.rotation.y += delta * 0.5
     });
 
     const torusArgs: [number, number, number, number] = [1.2, 0.15, 64, 128];
@@ -77,13 +77,13 @@ function ReactLogo({ position }: { position: [number, number, number] }) {
 function HologramGlobe({ position }: { position: [number, number, number] }) {
     const group = useRef<THREE.Group>(null);
     useFrame((state, delta) => {
-        if(group.current) group.current.rotation.y -= delta * 0.2
-     });
- 
+        if (group.current) group.current.rotation.y -= delta * 0.2
+    });
+
     return (
         <group ref={group} position={position} scale={1.5}>
             <Sphere args={[0.9, 32, 32]}>
-                 <meshBasicMaterial color={CONFIG.globeColor} transparent opacity={0.15} />
+                <meshBasicMaterial color={CONFIG.globeColor} transparent opacity={0.15} />
             </Sphere>
             <Sphere args={[1, 24, 24]}>
                 <meshBasicMaterial color={CONFIG.globeColor} wireframe transparent opacity={0.4} toneMapped={false} />
@@ -96,23 +96,23 @@ function HologramGlobe({ position }: { position: [number, number, number] }) {
 // Replaces the broken GLTF download with a custom geometric ship
 function ProceduralSpaceship({ position }: { position: [number, number, number] }) {
     const group = useRef<THREE.Group>(null);
-    
+
     useFrame((state) => {
-        if(group.current) {
-             const t = state.clock.getElapsedTime();
-             group.current.position.y = position[1] + Math.sin(t * 1) * 0.2;
-             group.current.rotation.z = Math.sin(t * 0.5) * 0.1;
-             group.current.rotation.x = Math.sin(t * 0.2) * 0.05;
+        if (group.current) {
+            const t = state.clock.getElapsedTime();
+            group.current.position.y = position[1] + Math.sin(t * 1) * 0.2;
+            group.current.rotation.z = Math.sin(t * 0.5) * 0.1;
+            group.current.rotation.x = Math.sin(t * 0.2) * 0.05;
         }
-     });
+    });
 
     return (
         <group ref={group} position={position} rotation={[0, Math.PI, 0]} scale={0.8}>
             {/* Main Hull */}
             <Cone args={[0.7, 3, 32]} rotation={[Math.PI / 2, 0, 0]}>
-                 <TechMaterial color={CONFIG.shipColor} />
+                <TechMaterial color={CONFIG.shipColor} />
             </Cone>
-            
+
             {/* Cockpit Glass */}
             <Sphere args={[0.35]} position={[0, 0.2, 0.5]}>
                 <meshStandardMaterial color="#000" roughness={0} metalness={1} envMapIntensity={2} />
@@ -122,7 +122,7 @@ function ProceduralSpaceship({ position }: { position: [number, number, number] 
             <Box args={[3, 0.1, 1.5]} position={[0, -0.2, -0.5]}>
                 <TechMaterial color={CONFIG.shipColor} />
             </Box>
-            
+
             {/* Vertical Stabilizers */}
             <Box args={[0.1, 1, 1]} position={[1.2, 0.3, -0.5]} rotation={[0, 0, 0.2]}>
                 <TechMaterial color={CONFIG.shipColor} />
@@ -133,18 +133,18 @@ function ProceduralSpaceship({ position }: { position: [number, number, number] 
 
             {/* Engine Thrusters */}
             <Cylinder args={[0.2, 0.3, 0.5]} position={[0.6, -0.2, -1.5]} rotation={[Math.PI / 2, 0, 0]}>
-                 <TechMaterial color="#333" />
+                <TechMaterial color="#333" />
             </Cylinder>
             <Cylinder args={[0.2, 0.3, 0.5]} position={[-0.6, -0.2, -1.5]} rotation={[Math.PI / 2, 0, 0]}>
-                 <TechMaterial color="#333" />
+                <TechMaterial color="#333" />
             </Cylinder>
 
             {/* Engine Glow */}
             <Sphere args={[0.18]} position={[0.6, -0.2, -1.7]}>
-                 <meshBasicMaterial color={CONFIG.engineColor} toneMapped={false} />
+                <meshBasicMaterial color={CONFIG.engineColor} toneMapped={false} />
             </Sphere>
             <Sphere args={[0.18]} position={[-0.6, -0.2, -1.7]}>
-                 <meshBasicMaterial color={CONFIG.engineColor} toneMapped={false} />
+                <meshBasicMaterial color={CONFIG.engineColor} toneMapped={false} />
             </Sphere>
         </group>
     );
@@ -193,15 +193,15 @@ export default function GlobalCanvas() {
                 gl={{ antialias: false, powerPreference: "high-performance", alpha: false, stencil: false, depth: true }}
             >
                 <Lights />
-                <Environment preset="city" blur={0.8} /> 
+                <Environment preset="city" blur={0.8} />
                 <Stars radius={60} depth={50} count={4000} factor={4} saturation={0} fade speed={1} />
 
-                <EffectComposer disableNormalPass>
+                <EffectComposer enableNormalPass={false}>
                     <Bloom luminanceThreshold={0.9} mipmapBlur intensity={1.5} radius={0.5} />
                     <Noise opacity={0.04} />
                     <Vignette eskil={false} offset={0.1} darkness={1.1} />
                 </EffectComposer>
-                
+
                 {/* No Suspense needed anymore since everything is procedural! */}
                 <SceneContent />
             </Canvas>
