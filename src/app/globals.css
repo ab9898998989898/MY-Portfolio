@@ -1,0 +1,53 @@
+@import "tailwindcss";
+html{
+  scroll-behavior: smooth;
+  cursor: url('/curss.png') 0 0, auto;
+}
+a, button, input[type="submit"], .clickable {
+  cursor: url('/curss.png') 0 0, pointer;
+}
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --neon-cyan: #00f3ff;
+  --neon-purple: #bc13fe;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+}
+
+@theme inline {
+  --color-deep-black: #050505;
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-purple: var(--neon-purple);
+  --color-glass-border: var(--glass-border);
+  --color-glass-bg: var(--glass-bg);
+  
+  --font-inter: var(--font-inter);
+  --font-space: var(--font-space-grotesk);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+}
+
+body {
+  background: var(--color-deep-black);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space), sans-serif;
+}
+
+@media (max-width: 768px) {
+  html, body, a, button {
+    cursor: auto;
+  }
+}
