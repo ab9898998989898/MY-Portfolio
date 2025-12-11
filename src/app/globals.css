@@ -1,11 +1,8 @@
 @import "tailwindcss";
 html{
   scroll-behavior: smooth;
-  cursor: url('/curss.png') 0 0, auto;
 }
-a, button, input[type="submit"], .clickable {
-  cursor: url('/curss.png') 0 0, pointer;
-}
+
 
 :root {
   --background: #000000;
