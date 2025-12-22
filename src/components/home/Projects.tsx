@@ -7,61 +7,64 @@ import Image from "next/image";
 
 const projects = [
     {
-        title: "Next-Gen Portfolio",
-        description: "A cutting-edge immersive 3D personal website that pushes the limits of modern browser rendering. This project serves as a comprehensive case study in performance engineering, demonstrating that cinematic web experiences can be both visually stunning and highly performant across devices.",
-        techStack: ["Next.js 16", "Three.js / R3F", "GSAP ScrollTrigger", "Tailwind v4", "TypeScript"],
+        title: "Interactive 3D Portfolio",
+        description: "A cutting-edge immersive portfolio website featuring 3D animations, smooth scroll experiences, and AI-powered chatbot integration. Built with performance optimization ensuring fast load times despite complex visual effects.",
+        techStack: ["Next.js", "React Three Fiber", "GSAP", "Tailwind CSS", "TypeScript"],
         features: [
-            "Procedural 3D Background with Physic-based materials",
-            "Context-aware AI Chatbot with Offline Fallback Mode",
-            "Butter-smooth Lenis Scroll integration for premium feel",
-            "Fully responsive Glassmorphism UI with reactive tilt",
-            "Dynamic lighting system reacting to user interaction"
+            "Procedural 3D background with physics-based materials",
+            "AI-powered chatbot for visitor interaction",
+            "Butter-smooth Lenis scroll integration",
+            "Fully responsive glassmorphism UI design",
+            "SEO-optimized with schema markup"
         ],
-        image: "https://placehold.co/800x600/050505/00f3ff?text=Next-Gen+Experience",
+        image: "https://placehold.co/800x600/050505/00f3ff?text=3D+Portfolio",
         preview: "#",
-        github: "#"
+        github: "#",
+        alt: "Interactive 3D Portfolio Website Preview"
     },
     {
-        title: "E-Commerce Analytics Hub",
-        description: "A centralized, mission-critical command center for high-volume e-commerce brands. This dashboard aggregates disparate data streams from Shopify, Google Analytics, and Facebook Ads into a single source of truth, enabling real-time decision making for stakeholders.",
-        techStack: ["React 19", "Node.js (NestJS)", "MongoDB Aggregations", "Redis", "Socket.io"],
+        title: "Full-Stack Admin Dashboard",
+        description: "A comprehensive admin panel built with the MERN stack, featuring real-time data visualization, user management, and role-based access control. Designed for scalability and ease of use.",
+        techStack: ["React.js", "Node.js", "Express.js", "MongoDB", "Chart.js"],
         features: [
-            "Real-time profit tracking via synchronized WebSockets",
-            "AI-powered predictive inventory forecasting algorithms",
-            "Custom report generator with automated PDF export",
-            "Granular Role-based access control (RBAC)",
-            "Dark mode tailored for data visualization efficiency"
+            "Real-time data updates via WebSocket",
+            "Role-based access control (RBAC)",
+            "Interactive charts and analytics",
+            "User management with CRUD operations",
+            "Dark mode optimized interface"
         ],
-        image: "https://placehold.co/800x600/050505/bc13fe?text=Analytics+Hub",
+        image: "https://placehold.co/800x600/050505/bc13fe?text=Admin+Dashboard",
         preview: "#",
-        github: "#"
+        github: "#",
+        alt: "Full-Stack Admin Dashboard Preview"
     },
     {
-        title: "SaaS Content Generator",
-        description: "An innovative AI-powered writing assistant designed specifically for B2B SaaS marketing teams. Unlike generic tools, it understands complex brand voices and technical nuance, generating SEO-optimized articles that require minimal human editing.",
-        techStack: ["Next.js 14", "OpenAI GPT-4 API", "Stripe Connect", "PostgreSQL", "Prisma"],
+        title: "AI-Powered Task Manager",
+        description: "A smart task management application leveraging AI to help users organize, prioritize, and complete tasks efficiently. Features include natural language processing and intelligent task suggestions.",
+        techStack: ["Next.js", "TypeScript", "OpenAI API", "MongoDB", "NextAuth"],
         features: [
-            "Advanced Voice Cloning for consistent brand identity",
-            "Automatic NLP-based SEO keyword insertion",
-            "Multi-tenant architecture with isolated workspaces",
-            "Usage-based billing via Stripe subscription metering",
-            "Collaborative real-time editor for teams"
+            "AI-powered task prioritization",
+            "Natural language task creation",
+            "Collaborative workspaces for teams",
+            "Progress tracking and analytics",
+            "Secure authentication with NextAuth"
         ],
-        image: "https://placehold.co/800x600/050505/00ff00?text=AI+SaaS+Platform",
+        image: "https://placehold.co/800x600/050505/00ff00?text=AI+Task+Manager",
         preview: "#",
-        github: "#"
+        github: "#",
+        alt: "AI-Powered Task Management Application Preview"
     }
 ];
 
 export default function Projects() {
     return (
-        <section id="projects" className="py-20 relative z-10">
+        <section id="projects" className="py-20 relative z-10" aria-labelledby="projects-heading">
             <div className="container mx-auto px-6">
-                <h2 className="text-4xl md:text-5xl font-bold font-space mb-4 text-center">
-                    Featured <span className="text-neon-cyan">Masterpieces</span>
+                <h2 id="projects-heading" className="text-4xl md:text-5xl font-bold font-space mb-4 text-center">
+                    Featured <span className="text-neon-cyan">Projects</span>
                 </h2>
                 <p className="text-gray-400 text-center max-w-2xl mx-auto mb-20">
-                    A selection of complex systems and creative experiences I've engineered.
+                    A selection of web applications and experiences I've designed and developed from concept to deployment.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -70,9 +73,10 @@ export default function Projects() {
                             <div className="relative h-56 w-full mb-6 rounded-xl overflow-hidden border border-white/5">
                                 <Image
                                     src={project.image}
-                                    alt={project.title}
+                                    alt={project.alt}
                                     fill
                                     className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                    loading="lazy"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent" />
 
@@ -88,7 +92,7 @@ export default function Projects() {
 
                                 <div className="mb-6">
                                     <h4 className="text-xs font-bold text-neon-cyan uppercase tracking-widest mb-3 flex items-center gap-2">
-                                        <Layers size={14} /> Tech Stack
+                                        <Layers size={14} aria-hidden="true" /> Tech Stack
                                     </h4>
                                     <div className="flex flex-wrap gap-2">
                                         {project.techStack.map(tech => (
@@ -101,12 +105,12 @@ export default function Projects() {
 
                                 <div className="mb-8">
                                     <h4 className="text-xs font-bold text-neon-purple uppercase tracking-widest mb-3 flex items-center gap-2">
-                                        <Zap size={14} /> Key Features
+                                        <Zap size={14} aria-hidden="true" /> Key Features
                                     </h4>
                                     <ul className="space-y-2">
                                         {project.features.map((feature, idx) => (
                                             <li key={idx} className="text-xs text-gray-400 flex items-start gap-2">
-                                                <span className="text-neon-purple mt-0.5">▪</span> {feature}
+                                                <span className="text-neon-purple mt-0.5" aria-hidden="true">▪</span> {feature}
                                             </li>
                                         ))}
                                     </ul>
@@ -114,11 +118,21 @@ export default function Projects() {
                             </div>
 
                             <div className="flex gap-4 mt-auto border-t border-white/10 pt-6">
-                                <Button variant="outline" size="sm" className="flex-1 gap-2 hover:bg-neon-cyan hover:text-black hover:border-neon-cyan">
-                                    <ExternalLink size={16} /> Live Demo
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1 gap-2 hover:bg-neon-cyan hover:text-black hover:border-neon-cyan"
+                                    aria-label={`View live demo of ${project.title}`}
+                                >
+                                    <ExternalLink size={16} aria-hidden="true" /> Live Demo
                                 </Button>
-                                <Button variant="ghost" size="sm" className="flex-1 gap-2">
-                                    <Github size={16} /> Code
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="flex-1 gap-2"
+                                    aria-label={`View source code of ${project.title} on GitHub`}
+                                >
+                                    <Github size={16} aria-hidden="true" /> Code
                                 </Button>
                             </div>
                         </GlassCard>

@@ -1,43 +1,70 @@
 "use client";
 
 import { GlassCard } from "@/components/ui/GlassCard";
-import { Code, Rocket, BarChart3, Globe } from "lucide-react";
+import { Code, Rocket, Search, Globe } from "lucide-react";
 import Tilt from "react-parallax-tilt";
 
 const services = [
     {
-        title: "Full Stack Development",
-        icon: <Code size={40} className="text-neon-cyan" />,
-        description: "End-to-end web application development.",
-        features: ["React/Next.js Architecture", "Database Design (SQL/NoSQL)", "API Development (REST/GraphQL)", "Payment Gateway Integration"]
+        title: "Full-Stack Web Development",
+        icon: <Code size={40} className="text-neon-cyan" aria-hidden="true" />,
+        description: "Complete web application development from frontend to backend.",
+        features: [
+            "React.js & Next.js Applications",
+            "Node.js & Express.js Backend",
+            "MongoDB Database Design",
+            "RESTful API Development",
+            "Authentication & Security"
+        ]
+    },
+    {
+        title: "Frontend Development",
+        icon: <Globe size={40} className="text-blue-400" aria-hidden="true" />,
+        description: "Beautiful, responsive user interfaces that engage visitors.",
+        features: [
+            "React Component Development",
+            "TypeScript Integration",
+            "Responsive Design (Mobile-First)",
+            "UI/UX Implementation",
+            "Tailwind CSS Styling"
+        ]
     },
     {
         title: "Performance Optimization",
-        icon: <Rocket size={40} className="text-purple-500" />,
-        description: "Making the web fly.",
-        features: ["Core Web Vitals Tuning", "Server-Side Rendering (SSR)", "Image Optimization", "Code Splitting & Bundle Analysis"]
-    },
-    {
-        title: "Data-Driven Marketing",
-        icon: <BarChart3 size={40} className="text-green-400" />,
-        description: "Growth hacking strategies that work.",
-        features: ["SEO (Technical & Content)", "Google Ads Management", "Conversion Rate Optimization", "Analytics Dashboard Setup"]
+        icon: <Rocket size={40} className="text-purple-500" aria-hidden="true" />,
+        description: "Making your website fast and SEO-ready.",
+        features: [
+            "Core Web Vitals Optimization",
+            "Image & Asset Optimization",
+            "Code Splitting & Lazy Loading",
+            "Server-Side Rendering (SSR)",
+            "Lighthouse Score Improvement"
+        ]
     },
     {
         title: "3D Web Experiences",
-        icon: <Globe size={40} className="text-blue-400" />,
-        description: "Immersive visuals for the modern web.",
-        features: ["Three.js / R3F Scenes", "GLSL Shaders", "Scroll-based Animations", "Interactive 3D Product Viewers"]
+        icon: <Search size={40} className="text-green-400" aria-hidden="true" />,
+        description: "Immersive 3D visuals that make your site stand out.",
+        features: [
+            "Three.js / React Three Fiber",
+            "Interactive 3D Elements",
+            "Scroll-based Animations",
+            "GSAP Animation Integration",
+            "Performance-Optimized 3D"
+        ]
     }
 ];
 
 export default function Services() {
     return (
-        <section id="services" className="py-24 relative z-10">
+        <section id="services" className="py-24 relative z-10" aria-labelledby="services-heading">
             <div className="container mx-auto px-6">
-                <h2 className="text-4xl md:text-5xl font-bold font-space mb-16 text-center">
+                <h2 id="services-heading" className="text-4xl md:text-5xl font-bold font-space mb-4 text-center">
                     My <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-neon-cyan">Services</span>
                 </h2>
+                <p className="text-gray-400 text-center max-w-2xl mx-auto mb-16">
+                    I offer comprehensive web development services to help bring your vision to life. Here's how I can help you.
+                </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {services.map((service, index) => (
@@ -52,13 +79,27 @@ export default function Services() {
                                 <ul className="text-left w-full space-y-2">
                                     {service.features.map((f, i) => (
                                         <li key={i} className="text-xs text-gray-500 flex items-start gap-2">
-                                            <span className="text-neon-cyan">▪</span> {f}
+                                            <span className="text-neon-cyan" aria-hidden="true">▪</span> {f}
                                         </li>
                                     ))}
                                 </ul>
                             </GlassCard>
                         </Tilt>
                     ))}
+                </div>
+
+                {/* CTA */}
+                <div className="text-center mt-16">
+                    <p className="text-gray-400 mb-6">
+                        Have a project in mind? Let's discuss how I can help.
+                    </p>
+                    <a
+                        href="#contact"
+                        className="inline-block px-8 py-4 bg-gradient-to-r from-neon-cyan to-neon-purple text-black font-bold rounded-full hover:shadow-[0_0_30px_rgba(0,243,255,0.4)] transition-all duration-300"
+                        aria-label="Get in touch to discuss your project"
+                    >
+                        Get a Free Consultation
+                    </a>
                 </div>
             </div>
         </section>

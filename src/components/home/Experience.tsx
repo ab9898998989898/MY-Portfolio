@@ -10,43 +10,43 @@ gsap.registerPlugin(ScrollTrigger);
 
 const experiences = [
     {
-        role: "Senior Full Stack Engineer",
-        company: "Quantum Leap Tech",
-        period: "2023 - Present",
-        description: "Leading the architectural vision for enterprise-grade SaaS solutions. I oversee a squad of 8 senior developers, driving best practices in code quality, CI/CD pipelines, and cloud-native deployments.",
+        role: "Full-Stack Web Developer",
+        company: "Freelance / Contract",
+        period: "2022 - Present",
+        description: "Delivering end-to-end web solutions for clients worldwide. I specialize in building custom MERN stack applications, from initial concept through deployment and maintenance.",
         achievements: [
-            "Architected a microservices-based analytics platform serving 50k+ daily users.",
-            "Reduced AWS infrastructure costs by 40% through serverless optimization.",
-            "Implemented real-time data streaming using WebSockets and Redis.",
-            "Mentored junior developers, resulting in a 50% decrease in bug reports."
+            "Built 15+ production-ready web applications for diverse clients",
+            "Developed interactive portfolios with 3D elements using Three.js",
+            "Implemented AI-powered features using OpenAI and Gemini APIs",
+            "Achieved 95%+ client satisfaction through clear communication"
         ],
-        stack: "Next.js 14, Node.js, AWS Lambda, Docker, PostgreSQL"
+        stack: "Next.js, React, Node.js, MongoDB, TypeScript, Tailwind CSS"
     },
     {
-        role: "Lead Digital Strategist & Developer",
-        company: "Neon Horizon Agency",
-        period: "2021 - 2023",
-        description: "Bridged the gap between marketing initiatives and technical execution. Delivered high-conversion web experiences that directly impacted client revenue streams.",
+        role: "Frontend Developer",
+        company: "Web Development Projects",
+        period: "2021 - 2022",
+        description: "Focused on creating responsive, user-friendly interfaces with modern JavaScript frameworks. Developed expertise in React ecosystem and performance optimization.",
         achievements: [
-            "Spearheaded digital transformation campaigns for Fortune 500 clients.",
-            "Increased organic traffic by 450% YOY through programmatic SEO.",
-            "Built custom internal tools that automated 30% of agency workflow.",
-            "Pioneered the agency's expansion into Web3 marketing services."
+            "Mastered React.js, Next.js, and TypeScript development",
+            "Built reusable component libraries for faster development",
+            "Implemented GSAP and Framer Motion animations",
+            "Optimized Core Web Vitals for improved SEO performance"
         ],
-        stack: "React, Gatsby, Shopify Liquid, Python Scripts, Google Cloud"
+        stack: "React, JavaScript, CSS3, GSAP, Tailwind CSS"
     },
     {
-        role: "UI/UX Developer & Freelancer",
-        company: "Self-Employed",
-        period: "2019 - 2021",
-        description: "Delivered bespoke web solutions for global startups with a focus on animation and interaction design. Created award-winning experiences that set clients apart.",
+        role: "Web Development Student",
+        company: "Self-Taught & Online Courses",
+        period: "2020 - 2021",
+        description: "Intensive self-study period focusing on full-stack web development fundamentals. Completed multiple certifications and built foundational projects.",
         achievements: [
-            "Developed 'Awwwards' recognized animated websites using Three.js.",
-            "Created a proprietary e-commerce boilerplate increasing conversions by 40%.",
-            "Collaborated directly with founders to translate vision into reality.",
-            "Managed full project lifecycles from wireframing to deployment."
+            "Completed Meta Front-End Developer certification",
+            "Built first portfolio websites and small applications",
+            "Learned HTML, CSS, JavaScript, and React basics",
+            "Developed problem-solving and debugging skills"
         ],
-        stack: "Three.js, GSAP, WebGL, Vanilla JS, SCSS"
+        stack: "HTML, CSS, JavaScript, React Basics, Git"
     },
 ];
 
@@ -57,13 +57,13 @@ export default function Experience() {
         const ctx = gsap.context(() => {
             const items = gsap.utils.toArray(".experience-item");
 
-            items.forEach((item: any) => {
-                gsap.from(item, {
+            items.forEach((item: unknown) => {
+                gsap.from(item as Element, {
                     opacity: 0,
                     x: -50,
                     duration: 1,
                     scrollTrigger: {
-                        trigger: item,
+                        trigger: item as Element,
                         start: "top 80%",
                         end: "bottom 20%",
                         toggleActions: "play none none reverse"
@@ -88,15 +88,15 @@ export default function Experience() {
     }, []);
 
     return (
-        <section id="experience" className="py-20 relative z-10" ref={containerRef}>
+        <section id="experience" className="py-20 relative z-10" ref={containerRef} aria-labelledby="experience-heading">
             <div className="container mx-auto px-6">
-                <h2 className="text-4xl md:text-5xl font-bold font-space mb-20 text-center">
-                    Professional <span className="text-neon-cyan">Journey</span>
+                <h2 id="experience-heading" className="text-4xl md:text-5xl font-bold font-space mb-20 text-center">
+                    My <span className="text-neon-cyan">Journey</span>
                 </h2>
 
                 <div className="relative max-w-4xl mx-auto">
                     {/* Center Line */}
-                    <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-neon-cyan to-neon-purple transform md:-translate-x-1/2 timeline-line opacity-50" />
+                    <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-neon-cyan to-neon-purple transform md:-translate-x-1/2 timeline-line opacity-50" aria-hidden="true" />
 
                     <div className="space-y-12">
                         {experiences.map((exp, index) => (
@@ -106,22 +106,22 @@ export default function Experience() {
                                     <GlassCard className="p-8 hover:scale-105 transition-transform duration-300 border-l-4 border-l-neon-cyan">
                                         <h3 className="text-2xl font-bold font-space text-white mb-2">{exp.role}</h3>
                                         <div className="flex items-center gap-2 text-neon-cyan mb-4 font-mono text-sm">
-                                            <Briefcase size={16} />
-                                            {exp.company} | {exp.period}
+                                            <Briefcase size={16} aria-hidden="true" />
+                                            <span>{exp.company} | {exp.period}</span>
                                         </div>
                                         <p className="text-gray-300 text-sm leading-relaxed mb-4">
                                             {exp.description}
                                         </p>
 
                                         {/* Achievements */}
-                                        <div className="space-y-2 mb-4">
+                                        <ul className="space-y-2 mb-4">
                                             {exp.achievements.map((item, i) => (
-                                                <div key={i} className="flex items-start gap-2 text-xs text-gray-400">
-                                                    <span className="text-neon-cyan mt-1">▪</span>
+                                                <li key={i} className="flex items-start gap-2 text-xs text-gray-400">
+                                                    <span className="text-neon-cyan mt-1" aria-hidden="true">▪</span>
                                                     <span>{item}</span>
-                                                </div>
+                                                </li>
                                             ))}
-                                        </div>
+                                        </ul>
 
                                         {/* Stack */}
                                         <div className="pt-4 border-t border-white/10">
@@ -132,7 +132,7 @@ export default function Experience() {
                                 </div>
 
                                 {/* Center Dot */}
-                                <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-white rounded-full border-4 border-neon-cyan transform md:-translate-x-1/2 -translate-x-1/2 z-10 shadow-[0_0_15px_rgba(0,243,255,1)]" />
+                                <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-white rounded-full border-4 border-neon-cyan transform md:-translate-x-1/2 -translate-x-1/2 z-10 shadow-[0_0_15px_rgba(0,243,255,1)]" aria-hidden="true" />
 
                                 {/* Empty Space for Grid */}
                                 <div className="hidden md:block w-1/2" />

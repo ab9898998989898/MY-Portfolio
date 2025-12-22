@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://abdullahpk.site/sitemap.xml
+
+# Block common bot paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+
+# Crawl delay for polite crawling
+Crawl-delay: 1

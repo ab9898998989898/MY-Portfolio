@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, Suspense, useEffect, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
     Float, Stars, Environment, MeshTransmissionMaterial, Sparkles,
@@ -18,16 +18,32 @@ const CONFIG = {
     bg: "#050505",
 }
 
-// --- REUSABLE MATERIALS ---
+// --- PERFORMANCE: Check if user prefers reduced motion ---
+function useReducedMotion() {
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        setPrefersReducedMotion(mediaQuery.matches);
+
+        const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+        mediaQuery.addEventListener('change', handler);
+        return () => mediaQuery.removeEventListener('change', handler);
+    }, []);
+
+    return prefersReducedMotion;
+}
+
+// --- OPTIMIZED MATERIALS (Reduced samples and resolution) ---
 const AerogelMaterial = ({ color }: { color: string }) => (
     <MeshTransmissionMaterial
         backside={false}
-        samples={4}
-        resolution={256}
+        samples={2}           // Reduced from 4 for performance
+        resolution={128}      // Reduced from 256 for performance
         thickness={2}
         roughness={0.3}
         anisotropy={0.1}
-        chromaticAberration={0.3}
+        chromaticAberration={0.2}  // Reduced from 0.3
         ior={1.5}
         color={color}
         emissive={color}
@@ -46,18 +62,19 @@ const TechMaterial = ({ color, emissive = false }: { color: string, emissive?: b
     />
 )
 
-// --- CUSTOM COMPONENT: PROCEDURAL REACT LOGO ---
+// --- CUSTOM COMPONENT: PROCEDURAL REACT LOGO (Optimized) ---
 function ReactLogo({ position }: { position: [number, number, number] }) {
     const group = useRef<THREE.Group>(null);
     useFrame((state, delta) => {
-        if (group.current) group.current.rotation.y += delta * 0.5
+        if (group.current) group.current.rotation.y += delta * 0.4; // Slightly slower
     });
 
-    const torusArgs: [number, number, number, number] = [1.2, 0.15, 64, 128];
+    // Lower polygon count for torus
+    const torusArgs: [number, number, number, number] = [1.2, 0.15, 32, 64]; // Reduced segments
 
     return (
         <group ref={group} position={position} rotation={[0, 0, Math.PI / 6]}>
-            <Sphere args={[0.35, 32, 32]}>
+            <Sphere args={[0.35, 24, 24]}> {/* Reduced segments from 32 */}
                 <AerogelMaterial color={CONFIG.reactColor} />
             </Sphere>
             <Torus args={torusArgs}>
@@ -73,48 +90,47 @@ function ReactLogo({ position }: { position: [number, number, number] }) {
     )
 }
 
-// --- CUSTOM COMPONENT: HOLOGRAPHIC GLOBE ---
+// --- CUSTOM COMPONENT: HOLOGRAPHIC GLOBE (Optimized) ---
 function HologramGlobe({ position }: { position: [number, number, number] }) {
     const group = useRef<THREE.Group>(null);
     useFrame((state, delta) => {
-        if (group.current) group.current.rotation.y -= delta * 0.2
+        if (group.current) group.current.rotation.y -= delta * 0.15; // Slightly slower
     });
 
     return (
         <group ref={group} position={position} scale={1.5}>
-            <Sphere args={[0.9, 32, 32]}>
+            <Sphere args={[0.9, 24, 24]}> {/* Reduced segments from 32 */}
                 <meshBasicMaterial color={CONFIG.globeColor} transparent opacity={0.15} />
             </Sphere>
-            <Sphere args={[1, 24, 24]}>
+            <Sphere args={[1, 16, 16]}> {/* Reduced segments from 24 */}
                 <meshBasicMaterial color={CONFIG.globeColor} wireframe transparent opacity={0.4} toneMapped={false} />
             </Sphere>
         </group>
     )
 }
 
-// --- FIXED COMPONENT: PROCEDURAL SPACESHIP ---
-// Replaces the broken GLTF download with a custom geometric ship
+// --- OPTIMIZED COMPONENT: PROCEDURAL SPACESHIP ---
 function ProceduralSpaceship({ position }: { position: [number, number, number] }) {
     const group = useRef<THREE.Group>(null);
 
     useFrame((state) => {
         if (group.current) {
             const t = state.clock.getElapsedTime();
-            group.current.position.y = position[1] + Math.sin(t * 1) * 0.2;
-            group.current.rotation.z = Math.sin(t * 0.5) * 0.1;
-            group.current.rotation.x = Math.sin(t * 0.2) * 0.05;
+            group.current.position.y = position[1] + Math.sin(t * 0.8) * 0.15; // Slower, smaller movement
+            group.current.rotation.z = Math.sin(t * 0.4) * 0.08;
+            group.current.rotation.x = Math.sin(t * 0.15) * 0.04;
         }
     });
 
     return (
         <group ref={group} position={position} rotation={[0, Math.PI, 0]} scale={0.8}>
-            {/* Main Hull */}
-            <Cone args={[0.7, 3, 32]} rotation={[Math.PI / 2, 0, 0]}>
+            {/* Main Hull - Reduced segments */}
+            <Cone args={[0.7, 3, 24]} rotation={[Math.PI / 2, 0, 0]}>
                 <TechMaterial color={CONFIG.shipColor} />
             </Cone>
 
             {/* Cockpit Glass */}
-            <Sphere args={[0.35]} position={[0, 0.2, 0.5]}>
+            <Sphere args={[0.35, 16, 16]} position={[0, 0.2, 0.5]}>
                 <meshStandardMaterial color="#000" roughness={0} metalness={1} envMapIntensity={2} />
             </Sphere>
 
@@ -132,18 +148,18 @@ function ProceduralSpaceship({ position }: { position: [number, number, number] 
             </Box>
 
             {/* Engine Thrusters */}
-            <Cylinder args={[0.2, 0.3, 0.5]} position={[0.6, -0.2, -1.5]} rotation={[Math.PI / 2, 0, 0]}>
+            <Cylinder args={[0.2, 0.3, 0.5, 16]} position={[0.6, -0.2, -1.5]} rotation={[Math.PI / 2, 0, 0]}>
                 <TechMaterial color="#333" />
             </Cylinder>
-            <Cylinder args={[0.2, 0.3, 0.5]} position={[-0.6, -0.2, -1.5]} rotation={[Math.PI / 2, 0, 0]}>
+            <Cylinder args={[0.2, 0.3, 0.5, 16]} position={[-0.6, -0.2, -1.5]} rotation={[Math.PI / 2, 0, 0]}>
                 <TechMaterial color="#333" />
             </Cylinder>
 
             {/* Engine Glow */}
-            <Sphere args={[0.18]} position={[0.6, -0.2, -1.7]}>
+            <Sphere args={[0.18, 12, 12]} position={[0.6, -0.2, -1.7]}>
                 <meshBasicMaterial color={CONFIG.engineColor} toneMapped={false} />
             </Sphere>
-            <Sphere args={[0.18]} position={[-0.6, -0.2, -1.7]}>
+            <Sphere args={[0.18, 12, 12]} position={[-0.6, -0.2, -1.7]}>
                 <meshBasicMaterial color={CONFIG.engineColor} toneMapped={false} />
             </Sphere>
         </group>
@@ -154,21 +170,22 @@ function SceneContent() {
     return (
         <group>
             {/* Top Left: React Logo */}
-            <Float speed={2} rotationIntensity={0.5} floatIntensity={1} floatingRange={[-0.1, 0.1]}>
+            <Float speed={1.5} rotationIntensity={0.4} floatIntensity={0.8} floatingRange={[-0.08, 0.08]}>
                 <ReactLogo position={[-3, 2.5, -4]} />
             </Float>
 
             {/* Center Right: The Custom Spaceship */}
-            <Float speed={1.5} rotationIntensity={0.2} floatIntensity={2} floatingRange={[-0.2, 0.2]}>
+            <Float speed={1.2} rotationIntensity={0.15} floatIntensity={1.5} floatingRange={[-0.15, 0.15]}>
                 <ProceduralSpaceship position={[3, 0, -3]} />
             </Float>
 
             {/* Bottom Left: Hologram Globe */}
-            <Float speed={1} rotationIntensity={1} floatIntensity={0.5} floatingRange={[-0.1, 0.1]}>
+            <Float speed={0.8} rotationIntensity={0.8} floatIntensity={0.4} floatingRange={[-0.08, 0.08]}>
                 <HologramGlobe position={[-2.5, -3, -5]} />
             </Float>
 
-            <Sparkles count={40} scale={10} size={3} speed={0.4} opacity={0.4} color="#ffffff" position={[0, 0, -8]} />
+            {/* Reduced sparkles for performance */}
+            <Sparkles count={20} scale={10} size={2.5} speed={0.3} opacity={0.3} color="#ffffff" position={[0, 0, -8]} />
         </group>
     );
 }
@@ -176,34 +193,70 @@ function SceneContent() {
 function Lights() {
     return (
         <>
-            <ambientLight intensity={0.1} />
-            <spotLight position={[-10, 10, 5]} angle={0.5} penumbra={1} intensity={4} color={CONFIG.reactColor} distance={20} />
-            <spotLight position={[10, -10, 5]} angle={0.5} penumbra={1} intensity={4} color={CONFIG.globeColor} distance={20} />
-            <spotLight position={[0, 15, 0]} angle={0.3} penumbra={0.5} intensity={2} color="#ffffff" />
+            <ambientLight intensity={0.15} />
+            {/* Reduced number of spotlights and intensity */}
+            <spotLight position={[-10, 10, 5]} angle={0.5} penumbra={1} intensity={3} color={CONFIG.reactColor} distance={20} />
+            <spotLight position={[10, -10, 5]} angle={0.5} penumbra={1} intensity={3} color={CONFIG.globeColor} distance={20} />
         </>
     );
 }
 
+// Loading fallback for Suspense
+function LoadingFallback() {
+    return null; // Empty fallback - background loads smoothly
+}
+
 export default function GlobalCanvas() {
+    const [isMounted, setIsMounted] = useState(false);
+
+    // Only render canvas after component mounts (prevents SSR issues)
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) {
+        // Return a placeholder with the same background color
+        return (
+            <div
+                className="fixed inset-0 w-full h-full pointer-events-none z-0 bg-black"
+                aria-hidden="true"
+            />
+        );
+    }
+
     return (
-        <div className="fixed inset-0 w-full h-full pointer-events-none z-0 bg-black">
+        <div
+            className="fixed inset-0 w-full h-full pointer-events-none z-0 bg-black"
+            aria-hidden="true"
+            role="presentation"
+        >
             <Canvas
-                dpr={[1, 1.5]}
+                dpr={[1, 1.25]}  // Reduced from [1, 1.5] for better mobile performance
                 camera={{ position: [0, 0, 8], fov: 35 }}
-                gl={{ antialias: false, powerPreference: "high-performance", alpha: false, stencil: false, depth: true }}
+                gl={{
+                    antialias: false,
+                    powerPreference: "high-performance",
+                    alpha: false,
+                    stencil: false,
+                    depth: true,
+                    failIfMajorPerformanceCaveat: true // Skip on low-end devices
+                }}
+                frameloop="always" // Consider "demand" for static scenes
             >
-                <Lights />
-                <Environment preset="city" blur={0.8} />
-                <Stars radius={60} depth={50} count={4000} factor={4} saturation={0} fade speed={1} />
+                <Suspense fallback={<LoadingFallback />}>
+                    <Lights />
+                    <Environment preset="city" blur={0.8} />
+                    {/* Reduced star count for performance */}
+                    <Stars radius={60} depth={50} count={2000} factor={4} saturation={0} fade speed={0.8} />
 
-                <EffectComposer enableNormalPass={false}>
-                    <Bloom luminanceThreshold={0.9} mipmapBlur intensity={1.5} radius={0.5} />
-                    <Noise opacity={0.04} />
-                    <Vignette eskil={false} offset={0.1} darkness={1.1} />
-                </EffectComposer>
+                    <EffectComposer enableNormalPass={false}>
+                        <Bloom luminanceThreshold={0.9} mipmapBlur intensity={1.2} radius={0.4} />
+                        <Noise opacity={0.03} />
+                        <Vignette eskil={false} offset={0.1} darkness={1.0} />
+                    </EffectComposer>
 
-                {/* No Suspense needed anymore since everything is procedural! */}
-                <SceneContent />
+                    <SceneContent />
+                </Suspense>
             </Canvas>
         </div>
     );
